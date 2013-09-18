@@ -29,9 +29,14 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+
+// Web interface
 app.get('/', routes.index);
 app.get('/users', user.list);
 
+// API
+app.use('/api', require('./api'));
+
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+  console.log('GDELT interactive interface started on port ' + app.get('port'));
 });

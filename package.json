@@ -1,5 +1,6 @@
 {
-  "name": "application-name",
+  "name": "gdelt-interactive",
+  "description": "An interactive interface for the GDELT daily updates",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,6 +8,9 @@
   },
   "dependencies": {
     "express": "3.4.0",
-    "ejs": "*"
+    "ejs": "*",
+    "pg": "2.6.2" ,
+    "any-db": "1.0.0-alpha2",
+    "any-db-postgres": "1.0.0-alpha2"
   }
 }
