@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GDELT Interactive</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+  </head>
+  <body>
+    <h1>GDELT Interactive</h1>
+    {% autoescape false %}{{ svg }}{% endautoescape %}
+  </body>
+  <script type="text/javascript" src = '/javascripts/d3.v3.min.js'></script>
+  <script type="text/javascript" src = '/javascripts/topojson.v1.min.js'></script>
+</html>

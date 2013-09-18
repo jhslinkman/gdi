@@ -3,18 +3,19 @@
  * Module dependencies.
  */
 
-var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
-var http = require('http');
-var path = require('path');
+var express = require('express'),
+    routes = require('./routes'),
+    http = require('http'),
+    path = require('path'),
+    swig = require('swig');
 
 var app = express();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
+app.engine('html', swig.renderFile);
 app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+app.set('view engine', 'html');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -29,10 +30,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-
 // Web interface
 app.get('/', routes.index);
-app.get('/users', user.list);
 
 // API
 app.use('/api', require('./api'));
