@@ -7,8 +7,102 @@
   </head>
   <body>
     <h1>GDELT Interactive</h1>
-    {% autoescape false %}{{ svg }}{% endautoescape %}
+    <svg height = "500" width = "850"></svg>
+    <div id = 'interactive_control'>
+      <button>Projection</button><button>Data</button>
+    </div>
   </body>
+  <script type="text/javascript" src = '/javascripts/jquery-2.0.3.min.js'></script>
+  <script type="text/javascript" src = '/javascripts/underscore-min.js'></script>
+  <script type="text/javascript" src = '/javascripts/backbone-min.js'></script>
   <script type="text/javascript" src = '/javascripts/d3.v3.min.js'></script>
   <script type="text/javascript" src = '/javascripts/topojson.v1.min.js'></script>
+  <script type="text/javascript">
+    D3 = Backbone.Model.extend({
+      initialize: function() {
+
+        console.log('D3 initialize called.');
+      },
+
+      defaults: {
+        area: 'world',
+        projection_type: 'albers',
+        projection: null,
+        type: 'default',
+        width: 850,
+        height: 500,
+        update_subunits: true,
+        update_data: true,
+        subunits: null,
+        data: null
+      },
+
+      query: function() {
+        console.log('D3 query called.');
+      },
+
+      update_projection: function(scale, tx, ty) {
+        this.set('projection', d3.geo[this.get('projection_type')]().scale(scale).translate([tx, ty]));
+      },
+
+      update_subunits: function() {
+        var _this = this;
+        $.get('api/subunits', function(data) { _this.set('subunits', data); });
+      },
+
+      update_data: function(limit) {
+        limit = typeof num !== 'undefined' ? limit : 1000;
+        var _this = this;
+        $.get('api/data/' + limit, function(data) {
+          _this.set('data', data);
+        })
+      },
+
+      draw: function() {
+
+        // if (this.get('update_subunits')) {
+          
+        //   this.set('update_projection', false);
+        //   this.set('update_data', true);
+        // }
+        // if (this.update_data) {
+          
+        //   });
+        //   this.set('update_data', false);
+        // }
+
+        var path = d3.geo.path()
+                     .projection(this.get('projection'));
+
+        var svg = d3.select('svg');
+
+        svg.append("path")
+            .datum(this.get('subunits'))
+            .attr("d", path);
+
+      //   svg.selectAll(".subunit")
+      //       .data(this.get('subunits').features)
+      //       .enter().append("path")
+      //       .attr("class", 'subunit')
+      //       .attr("d", path);
+
+      //   var circles = svg.selectAll("circle").data(this.get('data')).enter().append("circle");
+
+      //   circles.attr('r', 2)
+      //           .attr('class', 'circle')
+      //           .attr('transform', function(d) {
+      //               return "translate(" + projection(d.features[2].geometry.coordinates) + ")";
+      //           });
+
+      //   console.log('D3 draw called.');
+      }
+    });
+
+    $(document).ready( function() {
+      drawing = new D3();
+      drawing.update_projection();
+      drawing.update_subunits();
+      drawing.update_data();
+    });
+  </script>
 </html>
