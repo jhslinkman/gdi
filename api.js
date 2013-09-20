@@ -22,7 +22,7 @@ module.exports = function() {
 
     app.get('/subunits', function(req, res) {
         var raw = require('./data/world.json');
-        return res.send(topojson.feature(raw, raw.objects.world_subunits));
+        res.send(topojson.feature(raw, raw.objects.world_subunits));
     });
 
     app.get('/data/:limit', function(req, res) {

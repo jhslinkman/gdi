@@ -3,11 +3,16 @@
   <head>
     <title>GDELT Interactive</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <style type="text/css">
+      .subunit {
+        fill: #ddc;
+      }
 
+    </style>
   </head>
   <body>
     <h1>GDELT Interactive</h1>
-    <svg height = "500" width = "850"></svg>
+    <svg id = 'svg' height = "500" width = "850"></svg>
     <div id = 'interactive_control'>
       <button>Projection</button><button>Data</button>
     </div>
@@ -20,89 +25,102 @@
   <script type="text/javascript">
     D3 = Backbone.Model.extend({
       initialize: function() {
-
-        console.log('D3 initialize called.');
+        var _this = this;
+        this.get_projection();
+        this.get_subunits();
+        this.get_data(1000, function() {
+          _this.draw();
+        });
       },
 
       defaults: {
         area: 'world',
-        projection_type: 'albers',
+        projection_type: 'conicEquidistant',
         projection: null,
         type: 'default',
+        scale: 115,
         width: 850,
         height: 500,
-        update_subunits: true,
-        update_data: true,
         subunits: null,
-        data: null
+        subunits_changed: true,
+        data: null,
+        data_changed: true
       },
 
       query: function() {
         console.log('D3 query called.');
       },
 
-      update_projection: function(scale, tx, ty) {
+      get_projection: function(scale, tx, ty) {
+        scale = typeof scale !== 'undefined' ? scale : this.get('scale');
+        tx = typeof tx !== 'undefined' ? scale : this.get('width')/2;
+        ty = typeof ty !== 'undefined' ? scale : this.get('height')/2;
         this.set('projection', d3.geo[this.get('projection_type')]().scale(scale).translate([tx, ty]));
       },
 
-      update_subunits: function() {
+      get_subunits: function() {
         var _this = this;
-        $.get('api/subunits', function(data) { _this.set('subunits', data); });
+        $.get('api/subunits', function(data) {
+          _this.set('subunits', data);
+          _this.set('subunits_changed', true);
+          if (typeof callback !== 'undefined') {
+            callback();
+          }
+        });
       },
 
-      update_data: function(limit) {
+      get_data: function(limit, callback) {
         limit = typeof num !== 'undefined' ? limit : 1000;
         var _this = this;
         $.get('api/data/' + limit, function(data) {
           _this.set('data', data);
+          _this.set('data_changed', true);
+          if (typeof callback !== 'undefined') {
+            callback();
+          }
         })
       },
 
       draw: function() {
 
-        // if (this.get('update_subunits')) {
-          
-        //   this.set('update_projection', false);
-        //   this.set('update_data', true);
-        // }
-        // if (this.update_data) {
-          
-        //   });
-        //   this.set('update_data', false);
-        // }
+        d3.selectAll('circle').data([]).exit().remove();
+
+        var projection = this.get('projection');
 
         var path = d3.geo.path()
-                     .projection(this.get('projection'));
+                     .projection(projection);
 
         var svg = d3.select('svg');
 
-        svg.append("path")
-            .datum(this.get('subunits'))
-            .attr("d", path);
+        if (this.get('subunits_changed')) {
+          svg.append("path")
+              .datum(this.get('subunits'))
+              .attr("d", path);
 
-      //   svg.selectAll(".subunit")
-      //       .data(this.get('subunits').features)
-      //       .enter().append("path")
-      //       .attr("class", 'subunit')
-      //       .attr("d", path);
+          svg.selectAll(".subunit")
+              .data(this.get('subunits').features)
+              .enter().append("path")
+              .attr("class", 'subunit')
+              .attr("d", path);
 
-      //   var circles = svg.selectAll("circle").data(this.get('data')).enter().append("circle");
+          this.set('subunits_changed', false);
+        }
 
-      //   circles.attr('r', 2)
-      //           .attr('class', 'circle')
-      //           .attr('transform', function(d) {
-      //               return "translate(" + projection(d.features[2].geometry.coordinates) + ")";
-      //           });
+        if (this.get('data_changed')) {
+          var circles = svg.selectAll("circle").data(this.get('data')).enter().append("circle");
 
-      //   console.log('D3 draw called.');
+          circles.attr('r', 2)
+                  .attr('class', 'circle')
+                  .attr('transform', function(d) {
+                      return "translate(" + projection([d.actiongeo_long, d.actiongeo_lat]) + ")";
+                  });
+          this.set('data_changed', false);
+        }
       }
     });
 
     $(document).ready( function() {
       drawing = new D3();
-      drawing.update_projection();
-      drawing.update_subunits();
-      drawing.update_data();
     });
   </script>
 </html>
