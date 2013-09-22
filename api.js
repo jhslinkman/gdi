@@ -34,5 +34,19 @@ module.exports = function() {
             });
     });
 
+    app.get('/selectall/eventrootcode/:value', function(req, res) {
+        conn.query('SELECT globaleventid, actiongeo_long, actiongeo_lat, sourceurl, eventcode FROM events WHERE eventrootcode = '
+            + "'" + req.params.value + "'", function(error, result) {
+                if (error) throw error;
+                res.send(result.rows);
+            });
+    });
+
+
+    app.get('/cameocodes', function(req, res) {
+        var cameocodes = require('./data/cameo_codes.json');
+        res.send(cameocodes);
+    });
+
     return app
 }(); // Very important to return the function call as opposed to the function
