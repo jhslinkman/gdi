@@ -2,7 +2,7 @@ define(['underscore', 'backbone'], function(_, Backbone) {
 
     var GdeltData = Backbone.Model.extend({
         defaults: {
-            eventrootcode: '10',
+            eventrootcode: '00',
             eventbasecode: '000',
             eventcode: '0000',
             isrootevent: null,

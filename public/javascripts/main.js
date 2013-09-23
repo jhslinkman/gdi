@@ -12,7 +12,8 @@ requirejs.config({
         'gdeltdata': 'models/gdeltdata',
         // in views/
         'mapview': 'views/mapview',
-        'eventview': 'views/eventview'
+        'eventview': 'views/eventview',
+        'actorview': 'views/actorview'
     },
 
     shim: {
@@ -54,14 +55,15 @@ require(['jquery',
          'gdeltmap',
          'mapview',
          'eventview',
-         'swig',
+         'actorview',
          'bootstrap'],
-    function($, GdeltData, GdeltMap, MapView, EventView, swig) {
+    function($, GdeltData, GdeltMap, MapView, EventView, ActorView) {
     $(document).ready( function() {
         data = new GdeltData();
         drawing = new GdeltMap();
         mapview = new MapView();
         eventview = new EventView(data);
-        window.swig = swig;
+        actor1view = new ActorView(data, 'actor1');
+        actor2view = new ActorView(data, 'actor2');
     });
 });

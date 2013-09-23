@@ -18,28 +18,32 @@
       <div class = 'col-md-8'>
         <svg id = 'svg' height = "500" width = "850"></svg>
       </div>
-      <div id = 'interactive_control' class = 'col-md-4'
->        <ul class = 'nav nav-pills nav-justified'>
-          <li class = 'active'><a href="#view" data-toggle = 'pill'>View</a></li>
-          <li><a href="#event" data-toggle = 'pill'>Event</a></li>
-          <li><a href="#actors" data-toggle = 'pill'>Actors</a></li>
-          <li><a class = 'btn btn-primary' href="#"><span class = 'glyphicon glyphicon-globe'></span> Reload</a></li>
-        </ul>
-        <div class='tab-content'>
-          <div class = 'tab-pane active' id='view'></div>
-          <div class = 'tab-pane' id='event'>
+      <div id = 'interactive_control' class = 'col-md-4'>
+        <div class="row">
+          <div class="col-sm-9">
+            <ul class = 'nav nav-tabs nav-justified'>
+              <li class = 'active'><a href="#view" data-toggle = 'tab'>View</a></li>
+              <li><a href="#event" data-toggle = 'tab'>Event</a></li>
+              <li><a href="#actor1" data-toggle = 'tab'>Actor 1</a></li>
+              <li><a href="#actor2" data-toggle = 'tab'>Actor 2</a></li><!-- 
+              <li><a class = 'btn btn-primary' href="#"><span class = 'glyphicon glyphicon-globe'></span> Reload</a></li> -->
+            </ul>
+            <div class='tab-content'>
+              <div class = 'tab-pane active' id='view'></div>
+              <div class = 'tab-pane' id='event'></div>
+              <div class = 'tab-pane' id='actor1'></div>
+              <div class = 'tab-pane' id='actor2'></div>
+            </div>
           </div>
-          <div class = 'tab-pane' id='actors'></div>
+          <div class="col-sm-3">
+            <button class = 'btn btn-primary btn-block' href="#"><span class = 'glyphicon glyphicon-globe'></span> Reload</button>
+            <button class = 'btn btn-info btn-block' href="#"><span class = 'glyphicon glyphicon-eye-open'></span> View query</button>
+            <button class = 'btn btn-info btn-block' href="#"><span class = 'glyphicon glyphicon-fast-backward'></span> Reset query</button>
+            <button class = 'btn btn-info btn-block' href="#"><span class = 'glyphicon glyphicon-trash'></span> Clear query</button>
+          </div>
         </div>
-
       </div><!-- #interactive-control .col-md-4-->
     </div><!-- .row -->
   </body>
-  <!-- <script type="text/javascript" src = '/javascripts/jquery-2.0.3.min.js'></script>
-  <script type="text/javascript" src = '/javascripts/bootstrap-3.0.0.min.js'></script>
-  <script type="text/javascript" src = '/javascripts/underscore-min.js'></script>
-  <script type="text/javascript" src = '/javascripts/backbone-min.js'></script>
-  <script type="text/javascript" src = '/javascripts/d3.v3.min.js'></script>
-  <script type="text/javascript" src = '/javascripts/topojson.v1.min.js'></script>-->
   <script type="text/javascript" src = '/javascripts/require-2.1.8.min.js' data-main = '/javascripts/main.js'></script>
 </html>
