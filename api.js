@@ -25,7 +25,7 @@ module.exports = function() {
         res.send(topojson.feature(raw, raw.objects.world_subunits));
     });
 
-    app.get('/data/:limit', function(req, res) {
+    app.get('/selectrandom/:limit', function(req, res) {
         conn.query('SELECT globaleventid, actiongeo_long, actiongeo_lat, sourceurl FROM events ORDER BY random() LIMIT '
             + req.params.limit, function(error, result) {
                 if (error) throw error;

@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'gdeltmap', 'text!../../templates/mapview_template.html'],
-function($,        _,            Backbone,   GdeltMap, mapview_template) {
+define(['jquery', 'underscore', 'backbone', 'text!../../templates/mapview_template.html'],
+function($,        _,            Backbone, mapview_template) {
     var MapView = Backbone.View.extend({
         el: '#view',
         template: mapview_template,

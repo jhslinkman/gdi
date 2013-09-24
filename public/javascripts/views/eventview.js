@@ -1,11 +1,11 @@
 define(['jquery',
         'underscore',
         'backbone',
-        'gdeltdata',
+        'gdeltquery',
         'text!../../templates/eventview_template.html',
         'text!../../templates/eventselect.html',
         'text!../../templates/cameo_codes.json'],
-function($, _, Backbone, GdeltData,
+function($, _, Backbone, GDELTQuery,
     eventview_template, select_template, cameo_codes) {
     var EventView = Backbone.View.extend({
         el: '#event',
@@ -21,9 +21,9 @@ function($, _, Backbone, GdeltData,
                 this.data.set('eventcode', e.target.selectedOptions[0].value);
             }
         },
-        initialize: function(gdeltdata) {
+        initialize: function(gdeltquery) {
             var _this = this;
-            this.data = gdeltdata;
+            this.data = gdeltquery;
             this.render();
             this.cameo_codes = JSON.parse(cameo_codes);
             this.listenTo(this.data, 'change:eventrootcode', this.render_baseeventcode);

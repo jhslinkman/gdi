@@ -1,11 +1,11 @@
 define(['jquery',
         'underscore',
         'backbone',
-        'gdeltdata',
+        'gdeltquery',
         'text!../../templates/actor_template.html',
         // 'text!../../templates/actorform_template.html',
         'text!../../templates/actor_codes.json'],
-function($, _, Backbone, GdeltData,
+function($, _, Backbone, GDELTQuery,
     actor_template, actor_codes) {
     var ActorView = Backbone.View.extend({
         template: actor_template,
@@ -40,8 +40,8 @@ function($, _, Backbone, GdeltData,
             this.data.set(attr, val);
         },
 
-        initialize: function(gdeltdata, actor) {
-            this.data = gdeltdata;
+        initialize: function(gdeltquery, actor) {
+            this.data = gdeltquery;
             this.actor = actor;
             this.actor_codes = actor_codes;
             this.setElement('#' + actor);

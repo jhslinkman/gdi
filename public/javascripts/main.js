@@ -8,12 +8,13 @@ requirejs.config({
         'd3': 'lib/d3.v3.min',
         'swig': 'lib/swig.min',
         // in models/
-        'gdeltmap': 'models/gdeltmap',
-        'gdeltdata': 'models/gdeltdata',
+        'drawing': 'models/drawing',
+        'gdeltquery': 'models/gdeltquery',
         // in views/
         'mapview': 'views/mapview',
         'eventview': 'views/eventview',
-        'actorview': 'views/actorview'
+        'actorview': 'views/actorview',
+        'reloadview': 'views/reloadview'
     },
 
     shim: {
@@ -34,36 +35,25 @@ requirejs.config({
         'd3': {
             exports: 'd3'
         },
-        'swig': {
-            exports: 'swig'
-        }
-
-        // 'gdeltmap': {
-        //     deps: ['underscore', 'backbone', 'd3'],
-        //     exports: 'GdeltMap'
-        // },
-
-        // 'mapview': {
-        //     deps: ['jquery', 'underscore', 'backbone', 'gdeltmap', 'text!../templates/mapview_template.html'],
-        //     exports: 'MapView'
-        // }
     }
 });
 
 require(['jquery',
-         'gdeltdata',
-         'gdeltmap',
+         'gdeltquery',
+         'drawing',
          'mapview',
          'eventview',
          'actorview',
+         'reloadview',
          'bootstrap'],
-    function($, GdeltData, GdeltMap, MapView, EventView, ActorView) {
+    function($, GDELTQuery, Drawing, MapView, EventView, ActorView, ReloadView) {
     $(document).ready( function() {
-        data = new GdeltData();
-        drawing = new GdeltMap();
-        mapview = new MapView();
-        eventview = new EventView(data);
-        actor1view = new ActorView(data, 'actor1');
-        actor2view = new ActorView(data, 'actor2');
+        query = new GDELTQuery();
+        drawing = new Drawing(query);
+        reloadview = new ReloadView(drawing);
+        mapview = new MapView(drawing);
+        eventview = new EventView(query);
+        actor1view = new ActorView(query, 'actor1');
+        actor2view = new ActorView(query, 'actor2');
     });
 });
