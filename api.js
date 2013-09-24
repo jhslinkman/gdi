@@ -5,6 +5,7 @@
 module.exports = function() {
     var express = require('express'),
         conn = require('./database'),
+        sqlCheck = require('./sqlCheck'),
         d3 = require('d3'),
         topojson = require('topojson');
 
@@ -13,7 +14,7 @@ module.exports = function() {
 
     console.log('GDELT Interactive API version 0.0.1 loaded.');
 
-    app.get('/select/:geid', function(req, res) {
+    app.get('/event/:geid', function(req, res) {
         conn.query('SELECT * FROM events WHERE globaleventid = ' + req.params.geid, function(error, result) {
             if (error) throw error;
             res.send(result.rows[0]);
@@ -25,7 +26,7 @@ module.exports = function() {
         res.send(topojson.feature(raw, raw.objects.world_subunits));
     });
 
-    app.get('/selectrandom/:limit', function(req, res) {
+    app.get('/events/random/:limit', function(req, res) {
         conn.query('SELECT globaleventid, actiongeo_long, actiongeo_lat, sourceurl FROM events ORDER BY random() LIMIT '
             + req.params.limit, function(error, result) {
                 if (error) throw error;
@@ -34,13 +35,22 @@ module.exports = function() {
             });
     });
 
-    app.get('/selectall/eventrootcode/:value', function(req, res) {
-        conn.query('SELECT globaleventid, actiongeo_long, actiongeo_lat, sourceurl, eventcode FROM events WHERE eventrootcode = '
-            + "'" + req.params.value + "'", function(error, result) {
-                if (error) throw error;
-                res.send(result.rows);
-            });
-    });
+    app.get('/events', function(req, res) {
+        where = [];
+        for (var key in req.query) {
+            if (sqlCheck(key, req.query[key])) {
+                where.push(key + " = '" + req.query[key] + "'");
+            }
+        }
+        var sql = 'SELECT globaleventid, actiongeo_long, actiongeo_lat, sourceurl, eventcode FROM events';
+        if (where) {
+            sql += ' WHERE ' + where.join(' AND ');
+        }
+        conn.query(sql, function(error, result) {
+            if (error) throw error;
+            res.send(result.rows);
+        })
+    })
 
 
     app.get('/cameocodes', function(req, res) {

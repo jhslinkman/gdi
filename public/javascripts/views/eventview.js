@@ -12,22 +12,22 @@ function($, _, Backbone, GDELTQuery,
         template: eventview_template,
         events: {
             'change #eventrootcode': function(e) {
-                this.data.set('eventrootcode', e.target.selectedOptions[0].value);
+                this.query.set('eventrootcode', e.target.selectedOptions[0].value);
             },
             'change #eventbasecode': function(e) {
-                this.data.set('eventbasecode', e.target.selectedOptions[0].value);
+                this.query.set('eventbasecode', e.target.selectedOptions[0].value);
             },
             'change #eventcode': function(e) {
-                this.data.set('eventcode', e.target.selectedOptions[0].value);
+                this.query.set('eventcode', e.target.selectedOptions[0].value);
             }
         },
         initialize: function(gdeltquery) {
             var _this = this;
-            this.data = gdeltquery;
+            this.query = gdeltquery;
             this.render();
             this.cameo_codes = JSON.parse(cameo_codes);
-            this.listenTo(this.data, 'change:eventrootcode', this.render_baseeventcode);
-            this.listenTo(this.data, 'change:eventbasecode', this.render_eventcode);
+            this.listenTo(this.query, 'change:eventrootcode', this.render_baseeventcode);
+            this.listenTo(this.query, 'change:eventbasecode', this.render_eventcode);
         },
         render: function() {
             this.$el.html(eventview_template);
@@ -39,15 +39,14 @@ function($, _, Backbone, GDELTQuery,
             $('.eventcode').addClass('hidden');
             $('#eventbasecode').html(_.template(select_template, {
                 label: 'Event base type',
-                eventcodes: this.cameo_codes[this.data.get('eventrootcode')]['baseeventcodes'],
+                eventcodes: this.cameo_codes[this.query.get('eventrootcode')]['baseeventcodes'],
                 cameo_codes: this.cameo_codes,
             }));
         },
 
         render_eventcode: function() {
             // called after changing baseeventcode on model
-            var eventcodes = this.cameo_codes[this.data.get('eventbasecode')]['eventcodes'];
-            console.log(eventcodes);
+            var eventcodes = this.cameo_codes[this.query.get('eventbasecode')]['eventcodes'];
             if (eventcodes.length > 0) {
                 $('.eventcode').removeClass('hidden');
                 $('#eventcode').html(_.template(select_template, {
