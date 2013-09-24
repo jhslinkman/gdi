@@ -3,7 +3,6 @@ define(['jquery',
         'backbone',
         'gdeltquery',
         'text!../../templates/actor_template.html',
-        // 'text!../../templates/actorform_template.html',
         'text!../../templates/actor_codes.json'],
 function($, _, Backbone, GDELTQuery,
     actor_template, actor_codes) {
@@ -37,17 +36,19 @@ function($, _, Backbone, GDELTQuery,
         },
 
         setDataAttribute: function(attr, val) {
-            this.data.set(attr, val);
+            this.query.set(attr, val);
         },
 
         initialize: function(gdeltquery, actor) {
-            this.data = gdeltquery;
+            this.set_query(gdeltquery);
             this.actor = actor;
             this.actor_codes = actor_codes;
             this.setElement('#' + actor);
             this.actor_codes = JSON.parse(actor_codes);
             this.render();
         },
+        set_query: function(query) {this.query  = query;},
+
         render: function() {
             var type_options = _.template('<% for (var i = 0; i < type.length; i++) { var tuple = type[i]%><option value="<%= tuple[0] %>"><%= tuple[1] %></option><% } %>', {type: this.actor_codes['type']})
             var context = {

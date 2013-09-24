@@ -33,8 +33,6 @@ function(_, Backbone, d3, GDELTQuery) {
                 this.set('query', new GDELTQuery());
             }
             this.set_projection();
-            this.set_map(function() {_this.draw_map(); });
-            this.set_events(function() { _this.draw_events(); })
         },
 
         set_projection: function() {
@@ -97,11 +95,10 @@ function(_, Backbone, d3, GDELTQuery) {
             if (typeof callback !== 'undefined') callback();
         },
 
-        // draw: function() {
-        //     if (this.get('map_changed')) {
-                
-        //     }            
-        // }
+        draw: function() {
+            this.set_map(function() {_this.draw_map(); });
+            this.set_events(function() { _this.draw_events(); })
+        }
 
     });
     return Drawing;

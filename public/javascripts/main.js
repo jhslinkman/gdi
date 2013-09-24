@@ -11,10 +11,14 @@ requirejs.config({
         'drawing': 'models/drawing',
         'gdeltquery': 'models/gdeltquery',
         // in views/
+        'mainview': 'views/mainview',
         'mapview': 'views/mapview',
         'eventview': 'views/eventview',
         'actorview': 'views/actorview',
-        'reloadview': 'views/reloadview'
+        'reloadview': 'views/reloadview',
+        // in collections/
+        'drawinghistory': 'collections/drawinghistory',
+        'queryhistory': 'collections/queryhistory'
     },
 
     shim: {
@@ -39,21 +43,10 @@ requirejs.config({
 });
 
 require(['jquery',
-         'gdeltquery',
-         'drawing',
-         'mapview',
-         'eventview',
-         'actorview',
-         'reloadview',
+         'mainview',
          'bootstrap'],
-    function($, GDELTQuery, Drawing, MapView, EventView, ActorView, ReloadView) {
+    function($, MainView) {
     $(document).ready( function() {
-        query = new GDELTQuery();
-        drawing = new Drawing(query);
-        reloadview = new ReloadView(drawing);
-        mapview = new MapView(drawing);
-        eventview = new EventView(query);
-        actor1view = new ActorView(query, 'actor1');
-        actor2view = new ActorView(query, 'actor2');
+        mainview = new MainView();
     });
 });

@@ -22,13 +22,17 @@ function($, _, Backbone, GDELTQuery,
             }
         },
         initialize: function(gdeltquery) {
-            var _this = this;
-            this.query = gdeltquery;
+            this.set_query(gdeltquery);
             this.render();
             this.cameo_codes = JSON.parse(cameo_codes);
+        },
+
+        set_query: function(query) {
+            this.query = query;
             this.listenTo(this.query, 'change:eventrootcode', this.render_baseeventcode);
             this.listenTo(this.query, 'change:eventbasecode', this.render_eventcode);
         },
+
         render: function() {
             this.$el.html(eventview_template);
             return this;
