@@ -12,10 +12,23 @@ function($, _, Backbone, GDELTQuery,
         template: eventview_template,
         events: {
             'change #eventrootcode': function(e) {
-                this.query.set('eventrootcode', e.target.selectedOptions[0].value);
+                var val = e.target.selectedOptions[0].value;
+                if (val !== 'none') {
+                    this.query.set('eventrootcode', val);
+                } else {
+                    this.query.unset('eventrootcode');
+                    this.query.unset('eventbasecode');
+                    this.query.unset('eventcode');
+                }
             },
             'change #eventbasecode': function(e) {
-                this.query.set('eventbasecode', e.target.selectedOptions[0].value);
+                var val = e.target.selectedOptions[0].value;
+                if (val !== 'none') {
+                    this.query.set('eventbasecode', val);
+                } else {
+                    this.query.unset('eventbasecode');
+                    this.query.unset('eventcode');
+                }
             },
             'change #eventcode': function(e) {
                 this.query.set('eventcode', e.target.selectedOptions[0].value);
@@ -39,18 +52,40 @@ function($, _, Backbone, GDELTQuery,
         },
         render_baseeventcode: function() {
             // called after changing rooteventcode on model
-            $('.eventbasecode').removeClass('hidden');
-            $('.eventcode').addClass('hidden');
-            $('#eventbasecode').html(_.template(select_template, {
-                label: 'Event base type',
-                eventcodes: this.cameo_codes[this.query.get('eventrootcode')]['baseeventcodes'],
-                cameo_codes: this.cameo_codes,
-            }));
+            try {
+                var eventbasecodes = this.cameo_codes[this.query.get('eventrootcode')]['baseeventcodes'];
+            } catch (e) {
+                if (e instanceof TypeError) {
+                    var eventbasecodes = [];
+                } else {
+                    throw e;
+                }
+            }
+            if (eventbasecodes.length > 0) {
+                $('.eventbasecode').removeClass('hidden');
+                $('.eventcode').addClass('hidden');
+                $('#eventbasecode').html(_.template(select_template, {
+                    label: 'Event base type',
+                    eventcodes: eventbasecodes,
+                    cameo_codes: this.cameo_codes,
+                }));
+            } else {
+                $('.eventbasecode').addClass('hidden');
+                $('.eventcode').addClass('hidden');
+            }
         },
 
         render_eventcode: function() {
             // called after changing baseeventcode on model
-            var eventcodes = this.cameo_codes[this.query.get('eventbasecode')]['eventcodes'];
+            try {
+                var eventcodes = this.cameo_codes[this.query.get('eventbasecode')]['eventcodes'];
+            } catch (e) {
+                if (e instanceof TypeError) {
+                    var eventcodes = [];
+                } else {
+                    throw e;
+                }
+            }
             if (eventcodes.length > 0) {
                 $('.eventcode').removeClass('hidden');
                 $('#eventcode').html(_.template(select_template, {
@@ -58,6 +93,8 @@ function($, _, Backbone, GDELTQuery,
                     eventcodes: eventcodes,
                     cameo_codes: this.cameo_codes,
                 }));
+            } else {
+                $('.eventcode').addClass('hidden');
             }
         }
     });

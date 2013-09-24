@@ -18,7 +18,7 @@ function($, _, Backbone, d3, GDELTQuery, Drawing,
         events: {
             'click #reload': 'reload',
             'click #view_query': function() {
-                console.log(this.query.constructQueryString());
+                alert(this.query.constructQueryString());
             }
         },
 
