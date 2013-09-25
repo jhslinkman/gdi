@@ -2,7 +2,7 @@
   <div class = 'form-group'>
     <label for='<%= actor %>countrycode'>Country</label>
     <select class="form-control" id = '<%= actor %>countrycode'>
-      <option>---</option>
+      <option value = 'none'>---</option>
       <% for (var i = 0; i < actor_codes.country.length; i++) { var tuple = actor_codes.country[i]%>
         <option value="<%= tuple[0] %>"><%= tuple[1] %></option>
       <% } %>
@@ -11,7 +11,7 @@
   <div class = 'form-group'>
     <label for='<%= actor %>knowngroupcode'>Group</label>
     <select class="form-control" id = '<%= actor %>knowngroupcode'>
-      <option>---</option>
+      <option value = 'none'>---</option>
       <% for (var i = 0; i < actor_codes.knowngroup.length; i++) { var tuple = actor_codes.knowngroup[i]%>
         <option value="<%= tuple[0] %>"><%= tuple[1] %></option>
       <% } %>
@@ -22,7 +22,7 @@
   <div class = 'form-group'>
     <label for='<%= actor %>ethnicitycode'>Ethnicity</label>
     <select class="form-control" id = '<%= actor %>ethnicitycode'>
-      <option>---</option>
+      <option value = 'none'>---</option>
       <% for (var i = 0; i < actor_codes.ethnic.length; i++) { var tuple = actor_codes.ethnic[i]%>
         <option value="<%= tuple[0] %>"><%= tuple[1] %></option>
       <% } %>
@@ -31,7 +31,7 @@
   <div class = 'form-group'>
     <label for='<%= actor %>religioncode'>Religion</label>
     <select class="form-control" id = '<%= actor %>religioncode'>
-      <option>---</option>
+      <option value = 'none'>---</option>
       <% for (var i = 0; i < actor_codes.religion.length; i++) { var tuple = actor_codes.religion[i]%>
         <option value="<%= tuple[0] %>"><%= tuple[1] %></option>
       <% } %>
@@ -42,21 +42,21 @@
   <div class = 'form-group'>
     <label for='<%= actor %>type1code'>First type</label>
     <select class="form-control" id = '<%= actor %>type1code'>
-      <option>---</option>
+      <option value = 'none'>---</option>
       <%= type_options %>
     </select>
   </div>
   <div class = 'form-group'>
     <label for='<%= actor %>type2code'>Second type</label>
     <select class="form-control" id = '<%= actor %>type1code'>
-      <option>---</option>
+      <option value = 'none'>---</option>
       <%= type_options %>
     </select>
   </div>
   <div class = 'form-group'>
     <label for='<%= actor %>type3code'>Third type</label>
     <select class="form-control" id = '<%= actor %>type3code'>
-      <option>---</option>
+      <option value = 'none'>---</option>
       <%= type_options %>
     </select>
   </div>

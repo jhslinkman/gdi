@@ -12,31 +12,35 @@ function($, _, Backbone, GDELTQuery,
         events: function() {
             var e = {};
             e['change #' + this.actor + 'countrycode'] = function(e) {
-                    this.setDataAttribute(this.actor + 'countrycode', e.target.selectedOptions[0].value);
+                    this.setDataAttribute('countrycode', e.target.selectedOptions[0].value);
             }
             e['change #' + this.actor + 'knowngroupcode'] = function(e) {
-                    this.setDataAttribute(this.actor + 'knowngroupcode', e.target.selectedOptions[0].value);
+                    this.setDataAttribute('knowngroupcode', e.target.selectedOptions[0].value);
             }
             e['change #' + this.actor + 'ethnicitycode'] = function(e) {
-                    this.setDataAttribute(this.actor + 'ethnicitycode', e.target.selectedOptions[0].value);
+                    this.setDataAttribute('ethnicitycode', e.target.selectedOptions[0].value);
             }
             e['change #' + this.actor + 'religioncode'] = function(e) {
-                    this.setDataAttribute(this.actor + 'religioncode', e.target.selectedOptions[0].value);
+                    this.setDataAttribute('religioncode', e.target.selectedOptions[0].value);
             }
             e['change #' + this.actor + 'type1code'] = function(e) {
-                    this.setDataAttribute(this.actor + 'type1code', e.target.selectedOptions[0].value);
+                    this.setDataAttribute('type1code', e.target.selectedOptions[0].value);
             }
             e['change #' + this.actor + 'type2code'] = function(e) {
-                    this.setDataAttribute(this.actor + 'type2code', e.target.selectedOptions[0].value);
+                    this.setDataAttribute('type2code', e.target.selectedOptions[0].value);
             }
             e['change #' + this.actor + 'type3code'] = function(e) {
-                    this.setDataAttribute(this.actor + 'type3code', e.target.selectedOptions[0].value);
+                    this.setDataAttribute('type3code', e.target.selectedOptions[0].value);
             }
             return e
         },
 
-        setDataAttribute: function(attr, val) {
-            this.query.set(attr, val);
+        setDataAttribute: function(code, val) {
+            if (val !== 'none') {
+                this.query.set(this.actor + code, val);
+            } else {
+                this.query.unset(this.actor + code);
+            }
         },
 
         initialize: function(gdeltquery, actor) {

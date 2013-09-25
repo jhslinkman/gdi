@@ -72,7 +72,6 @@ function($, _, Backbone, d3, GDELTQuery, Drawing,
 
         loading: function(d) {
             if (d.get('events_loaded')) {
-                console.log('here');
                 $('#loading').addClass('hidden');
             } else {
                 $('#loading').removeClass('hidden');
