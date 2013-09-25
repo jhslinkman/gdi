@@ -51,6 +51,7 @@ function($, _, Backbone, GDELTQuery,
             this.actor_codes = JSON.parse(actor_codes);
             this.render();
         },
+
         set_query: function(query) {this.query  = query;},
 
         render: function() {
@@ -58,7 +59,8 @@ function($, _, Backbone, GDELTQuery,
             var context = {
                 actor: this.actor,
                 actor_codes: this.actor_codes,
-                type_options: type_options
+                // type_options: type_options,
+                query_presets: this.query.attributes
             };
             // console.log(_.template(this.template, context));
             this.$el.html(_.template(this.template, context));

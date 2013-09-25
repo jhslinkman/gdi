@@ -4,7 +4,7 @@
     <select class="form-control" id = '<%= actor %>countrycode'>
       <option value = 'none'>---</option>
       <% for (var i = 0; i < actor_codes.country.length; i++) { var tuple = actor_codes.country[i]%>
-        <option value="<%= tuple[0] %>"><%= tuple[1] %></option>
+        <option value="<%= tuple[0] %>"<% if (query_presets[actor + 'countrycode'] === tuple[0]) { %>selected = 'selected'<% } %>><%= tuple[1] %></option>
       <% } %>
     </select>
   </div>
@@ -13,7 +13,7 @@
     <select class="form-control" id = '<%= actor %>knowngroupcode'>
       <option value = 'none'>---</option>
       <% for (var i = 0; i < actor_codes.knowngroup.length; i++) { var tuple = actor_codes.knowngroup[i]%>
-        <option value="<%= tuple[0] %>"><%= tuple[1] %></option>
+        <option value="<%= tuple[0] %>"<% if (query_presets[actor + 'knowngroupcode'] === tuple[0]) { %>selected = 'selected'<% } %>><%= tuple[1] %></option>
       <% } %>
     </select>
   </div>
@@ -24,7 +24,7 @@
     <select class="form-control" id = '<%= actor %>ethnicitycode'>
       <option value = 'none'>---</option>
       <% for (var i = 0; i < actor_codes.ethnic.length; i++) { var tuple = actor_codes.ethnic[i]%>
-        <option value="<%= tuple[0] %>"><%= tuple[1] %></option>
+        <option value="<%= tuple[0] %>"<% if (query_presets[actor + 'ethnicitycode'] === tuple[0]) { %>selected = 'selected'<% } %>><%= tuple[1] %></option>
       <% } %>
     </select>
   </div>
@@ -33,7 +33,7 @@
     <select class="form-control" id = '<%= actor %>religioncode'>
       <option value = 'none'>---</option>
       <% for (var i = 0; i < actor_codes.religion.length; i++) { var tuple = actor_codes.religion[i]%>
-        <option value="<%= tuple[0] %>"><%= tuple[1] %></option>
+        <option value="<%= tuple[0] %>"<% if (query_presets[actor + 'religioncode'] === tuple[0]) { %>selected = 'selected'<% } %>><%= tuple[1] %></option>
       <% } %>
     </select>
   </div>
@@ -42,22 +42,28 @@
   <div class = 'form-group'>
     <label for='<%= actor %>type1code'>First type</label>
     <select class="form-control" id = '<%= actor %>type1code'>
-      <option value = 'none'>---</option>
-      <%= type_options %>
+      <option value="none">---</option>
+      <% for (var i = 0; i < actor_codes.type.length; i++) { var tuple = actor_codes.type[i]%>
+        <option value="<%= tuple[0] %>"<% if (query_presets[actor + 'type1code'] === tuple[0]) { %>selected = 'selected'<% } %>><%= tuple[1] %></option>
+      <% } %>
     </select>
   </div>
   <div class = 'form-group'>
     <label for='<%= actor %>type2code'>Second type</label>
     <select class="form-control" id = '<%= actor %>type1code'>
       <option value = 'none'>---</option>
-      <%= type_options %>
+      <% for (var i = 0; i < actor_codes.type.length; i++) { var tuple = actor_codes.type[i]%>
+        <option value="<%= tuple[0] %>"<% if (query_presets[actor + 'type2code'] === tuple[0]) { %>selected = 'selected'<% } %>><%= tuple[1] %></option>
+      <% } %>
     </select>
   </div>
   <div class = 'form-group'>
     <label for='<%= actor %>type3code'>Third type</label>
     <select class="form-control" id = '<%= actor %>type3code'>
       <option value = 'none'>---</option>
-      <%= type_options %>
+      <% for (var i = 0; i < actor_codes.type.length; i++) { var tuple = actor_codes.type[i]%>
+        <option value="<%= tuple[0] %>"<% if (query_presets[actor + 'type3code'] === tuple[0]) { %>selected = 'selected'<% } %>><%= tuple[1] %></option>
+      <% } %>
     </select>
   </div>
 </form>

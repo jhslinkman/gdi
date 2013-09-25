@@ -36,8 +36,8 @@ function($, _, Backbone, GDELTQuery,
         },
         initialize: function(gdeltquery) {
             this.set_query(gdeltquery);
-            this.render();
             this.cameo_codes = JSON.parse(cameo_codes);
+            this.render();
         },
 
         set_query: function(query) {
@@ -47,7 +47,10 @@ function($, _, Backbone, GDELTQuery,
         },
 
         render: function() {
-            this.$el.html(eventview_template);
+            var eventrootcode = this.query.get('eventrootcode');
+            this.$el.html(_.template(eventview_template, {eventrootcode: eventrootcode}));
+            this.render_baseeventcode()
+            this.render_eventcode()
             return this;
         },
         render_baseeventcode: function() {
@@ -67,6 +70,7 @@ function($, _, Backbone, GDELTQuery,
                 $('#eventbasecode').html(_.template(select_template, {
                     label: 'Event base type',
                     eventcodes: eventbasecodes,
+                    selectedEvent: this.query.get('eventbasecode'),
                     cameo_codes: this.cameo_codes,
                 }));
             } else {
@@ -91,6 +95,7 @@ function($, _, Backbone, GDELTQuery,
                 $('#eventcode').html(_.template(select_template, {
                     label: 'Refined event type',
                     eventcodes: eventcodes,
+                    selectedEvent: this.query.get('eventcode'),
                     cameo_codes: this.cameo_codes,
                 }));
             } else {

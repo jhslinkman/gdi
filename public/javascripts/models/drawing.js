@@ -29,13 +29,13 @@ function(_, Backbone, d3, GDELTQuery) {
         },
 
         initialize: function(query) {
-            if (query instanceof GDELTQuery) {
-                this.set('query', query);
-            } else if (typeof query !== 'undefined') {
-                throw new Error('Must initialize with a GDELTQuery object or no object at all.');
-            } else {
-                this.set('query', new GDELTQuery());
-            }
+            // if (query instanceof GDELTQuery) {
+            this.set('query', query);
+            // } else if (typeof query !== 'undefined') {
+            //     throw new Error('Must initialize with a GDELTQuery object or no object at all.');
+            // } else {
+            //     this.set('query', new GDELTQuery());
+            // }
             this.set_projection();
             this.on('change:map_loaded', this.set_loading_state, this);
             this.on('change:events_loaded', this.set_loading_state, this);

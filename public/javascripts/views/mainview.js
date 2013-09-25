@@ -19,6 +19,16 @@ function($, _, Backbone, d3, GDELTQuery, Drawing,
             'click #reload': 'reload',
             'click #view_query': function() {
                 alert(this.query.constructQueryString());
+            },
+            'click #clear_query': function() {
+                this.query = new GDELTQuery();
+                this.drawing.set('query', this.query);
+                this.eventview.set_query(this.query);
+                this.actor1view.set_query(this.query);
+                this.actor2view.set_query(this.query);
+                this.eventview.render();
+                this.actor1view.render();
+                this.actor2view.render();
             }
         },
 
@@ -33,7 +43,8 @@ function($, _, Backbone, d3, GDELTQuery, Drawing,
             this.queryhistory = new QueryHistory();
             this.queryhistory.add(query);
 
-            this.query = new GDELTQuery();
+            // this.query = new GDELTQuery();
+            this.query = _.clone(query);
             this.drawing = new Drawing(this.query);
             this.listenTo(this.drawing, 'change:events_loaded', this.loading);
 
@@ -56,13 +67,11 @@ function($, _, Backbone, d3, GDELTQuery, Drawing,
             });
 
             // clear old data and update history
-
-            // drawing = this.drawing;
             this.drawinghistory.add(drawing);
             this.queryhistory.add(this.query);
 
             // create new drawing and query objects
-            this.query = new GDELTQuery();
+            this.query = _.clone(this.query);
             this.drawing = new Drawing(this.query);
             this.listenTo(this.drawing, 'change:events_loaded', this.loading);
             this.eventview.set_query(this.query);
