@@ -22,6 +22,10 @@ function(_, Backbone, d3, GDELTQuery) {
                 type: 'xyplot'
             },
 
+            map_loaded: false,
+            events_loaded: false,
+            loaded: false
+
         },
 
         initialize: function(query) {
@@ -33,6 +37,9 @@ function(_, Backbone, d3, GDELTQuery) {
                 this.set('query', new GDELTQuery());
             }
             this.set_projection();
+            this.on('change:map_loaded', this.set_loading_state, this);
+            this.on('change:events_loaded', this.set_loading_state, this);
+            // this.on('request', function() {console.log('Request pending');}, this);
         },
 
         set_projection: function() {
@@ -41,9 +48,11 @@ function(_, Backbone, d3, GDELTQuery) {
 
         set_map: function(callback) {
             var _this = this;
+            this.set('map_loaded', false);
             $.get('api/subunits', function(data) {
                 _this.set('map_data', data);
                 _this.set('map_changed', true);
+                _this.set('map_loaded', true);
                 if (typeof callback !== 'undefined') {
                     callback();
                 }
@@ -71,10 +80,12 @@ function(_, Backbone, d3, GDELTQuery) {
         },
 
         set_events: function(callback) {
-            _this = this;
+            var _this = this;
+            this.set('events_loaded', false);
             this.get('query').query(function(q) {
                 _this.set('events', q);
                 _this.set('events_changed', true);
+                _this.set('events_loaded', true);
                 if (typeof callback !== 'undefined') callback();
             });
         },
@@ -95,9 +106,24 @@ function(_, Backbone, d3, GDELTQuery) {
             if (typeof callback !== 'undefined') callback();
         },
 
-        draw: function() {
-            this.set_map(function() {_this.draw_map(); });
-            this.set_events(function() { _this.draw_events(); })
+        draw: function(events_callback, map_callback) {
+            var _this = this;
+            this.set_map(function() {
+                _this.draw_map();
+                if (typeof map_callback !== 'undefined') map_callback();
+            });
+            this.set_events(function() {
+                _this.draw_events();
+                if (typeof events_callback !== 'undefined') events_callback();
+            })
+        },
+
+        set_loading_state: function() {
+            if (this.get('map_loaded') && this.get('events_loaded')) {
+                this.set('loaded', true);
+            } else if (this.get('loaded')) {
+                this.set('loaded', false);
+            }
         }
 
     });

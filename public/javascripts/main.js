@@ -6,7 +6,6 @@ requirejs.config({
         'backbone': 'lib/backbone.min',
         'bootstrap': 'lib/bootstrap-3.0.0.min',
         'd3': 'lib/d3.v3.min',
-        'swig': 'lib/swig.min',
         // in models/
         'drawing': 'models/drawing',
         'gdeltquery': 'models/gdeltquery',
@@ -38,7 +37,7 @@ requirejs.config({
         },
         'd3': {
             exports: 'd3'
-        },
+        }
     }
 });
 
