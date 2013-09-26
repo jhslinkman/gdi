@@ -14,7 +14,7 @@ module.exports = function() {
 
     console.log('GDELT Interactive API version 0.0.1 loaded.');
 
-    app.get('/event/:geid', function(req, res) {
+    app.get('/events/:geid', function(req, res) {
         conn.query('SELECT * FROM events WHERE globaleventid = ' + req.params.geid, function(error, result) {
             if (error) throw error;
             res.send(result.rows[0]);

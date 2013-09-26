@@ -100,6 +100,9 @@ function(_, Backbone, d3, GDELTQuery) {
                     .attr('class', 'event')
                     .attr('transform', function(d) {
                             return "translate(" + projection([d.actiongeo_long, d.actiongeo_lat]) + ")";
+                    })
+                    .attr('data-id', function(d) {
+                        return d.globaleventid;
                     });
                 this.set('events_changed', false);
             }

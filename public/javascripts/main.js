@@ -8,13 +8,16 @@ requirejs.config({
         'd3': 'lib/d3.v3.min',
         // in models/
         'drawing': 'models/drawing',
+        'gdeltevent': 'models/gdeltevent',
         'gdeltquery': 'models/gdeltquery',
         // in views/
+        'actorview': 'views/actorview',
+        'eventview': 'views/eventview',
         'mainview': 'views/mainview',
         'mapview': 'views/mapview',
-        'eventview': 'views/eventview',
-        'actorview': 'views/actorview',
         'reloadview': 'views/reloadview',
+        'svgview': 'views/svgview',
+        'eventmodal': 'views/eventmodal',
         // in collections/
         'drawinghistory': 'collections/drawinghistory',
         'queryhistory': 'collections/queryhistory'
@@ -43,8 +46,9 @@ requirejs.config({
 
 require(['jquery',
          'mainview',
+         'gdeltevent',
          'bootstrap'],
-    function($, MainView) {
+    function($, MainView, GDELTEvent) {
     $(document).ready( function() {
         mainview = new MainView();
     });

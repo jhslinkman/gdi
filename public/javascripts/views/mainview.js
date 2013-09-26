@@ -8,10 +8,11 @@ define(['jquery',
         'queryhistory',
         'mapview',
         'eventview',
-        'actorview'],
+        'actorview',
+        'svgview'],
 function($, _, Backbone, d3, GDELTQuery, Drawing,
          DrawingHistory, QueryHistory, MapView,
-         EventView, ActorView) {
+         EventView, ActorView, SVGView) {
     var MainView = Backbone.View.extend({
         el: '#interactive_control',
 
@@ -52,6 +53,7 @@ function($, _, Backbone, d3, GDELTQuery, Drawing,
             this.eventview = new EventView(this.query);
             this.actor1view = new ActorView(this.query, 'actor1');
             this.actor2view = new ActorView(this.query, 'actor2');
+            this.svgview = new SVGView();
         },
 
         reload: function() {
