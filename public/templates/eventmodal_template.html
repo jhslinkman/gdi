@@ -2,11 +2,35 @@
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h4 class="modal-title">GDELT Event <%= event.globaleventid %></h4>
+      <h4 class="modal-title">GDELT Event No. <%= event.globaleventid %></h4>
     </div>
     <div class="modal-body">
-      <%= event.actor1name %> <%= eventtype %> <%=event.actor2name %> in <%= event.actiongeo_fullname %>.
-      Source: <%= event.sourceurl %>
+      <div class = 'row'>
+        <div class = 'col-sm-12'>
+          <dl class = 'dl-horizontal'>
+            <dt>Actor 1</dt><dd><%= event.actor1name %></dd>
+            <dt>Action</dt><dd><%= eventtype %></dd>
+            <% if (event.actor2name) { %><dt>Actor 2</dt><dd><%=event.actor2name %></dd><% } %>
+            <dt>Location</dt><dd><%= event.actiongeo_fullname %></dd>
+            <br>
+            <dt>General classification</dt>
+            <dd>
+                <% if (event.quadclass == 1) { %>Verbal cooperation
+                <% } else if (event.quadclass == 2) { %>Material cooperation
+                <% } else if (event.quadclass == 3) { %>Verbal conflict
+                <% } else if (event.quadclass == 4) { %>Material conflict
+                <% } %>
+            </dd>
+            <dt>Goldstein scale</dt><dd><%= event.goldsteinscale %></dd>
+            <dt>Average tone</dt><dd><%= event.avgtone %></dd>
+            <br>
+            <dt>Number of mentions</dt><dd><%=event.nummentions %></dd>
+            <dt>Number of sources</dt><dd><%= event.numsources %></dd>
+            <dt>Number of articles</dt><dd><%= event.numarticles %></dd>
+          </dl>
+          Example source: <a href = '<%= event.sourceurl %>' style = 'word-wrap:break-word'><%= event.sourceurl %></a>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
