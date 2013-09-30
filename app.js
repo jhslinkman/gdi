@@ -32,6 +32,7 @@ if ('development' == app.get('env')) {
 
 // Web interface
 app.get('/', routes.index);
+app.get('/about', routes.about);
 
 // API
 app.use('/api', require('./api'));
