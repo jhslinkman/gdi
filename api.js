@@ -52,6 +52,12 @@ module.exports = function() {
         })
     })
 
+    app.get('/statistics', function(req, res) {
+        // var date = new Date();
+        // var raw_date = date.toDateString().split(' ');
+        var summaryStatistics = require('./data/20130910.summary.json');
+        res.send(summaryStatistics);
+    });
 
     app.get('/cameocodes', function(req, res) {
         var cameocodes = require('./data/cameo_codes.json');

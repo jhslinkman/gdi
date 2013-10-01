@@ -1,20 +1,57 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
     <head>
         <title>About GDELT Interactive</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel='stylesheet' href='/stylesheets/style.css' />
         <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-3.0.0.min.css" />
+        <style type="text/css">
+            #summary_statistics: {
+                height: 500px;
+                width: 850px;
+            }
+
+            text {
+              font-size: 11px;
+              pointer-events: none;
+            }
+
+            text.parent {
+              fill: #1f77b4;
+            }
+
+            circle {
+              fill: #ccc;
+              stroke: #999;
+              pointer-events: all;
+            }
+
+            circle.parent {
+              fill: #1f77b4;
+              fill-opacity: .1;
+              stroke: steelblue;
+            }
+
+            circle.parent:hover {
+              stroke: #ff7f0e;
+              stroke-width: .5px;
+            }
+
+            circle.child {
+              pointer-events: none;
+            }
+            circle.code_level_0 {
+                display: none;
+            }
+        </style>
     </head>
     <body>
         <div class = 'row'>
             <div class = 'col-md-12'>
-                <h1>GDELT Interactive</h1>
-                <p>A new way of visualizing the world's news.</p>
-                <p>Sometimes a picture is worth 180,000 words.</p>
-                <p>Graphic here: number of events in the last week, by day, separable by event type and in aggregate.</p>
-                <h2>About</h2>
+                <h1>GDELT Interactive <small>A new way of visualizing the world's news</small></h1>
                 <p>The Global Database of Events, Language, and Tone is a research project that scours the Internet for English language news articles, categorizing each distinct event it finds according to the <em>actors</em> involved, the <em>actions</em> they took and <em>where</em> they took then. The end result is a massive quantity of data, with 160,000 to 180,000 unique events being encoded on a daily basis and each event often being references by multiple news sources and mentioned in multiple articles.</p>
+                <svg id = 'summary_statistics'></svg>
+                <!-- <p>Sometimes a picture is worth 180,000 words.</p> -->
                 <p>The magnitude of these numbers is truly astounding and ought to give pause to any person who desires to stay abreast of global news. While the database itself was started as an academic research project, it holds within itself the potential for a new way of looking at global news.</p>
                 <p>This application unlocks that potential. We start with the global picture, giving a graphical answer to the question "what happened around the world recently?" Then we put the tools in your hands to refine that question and explore the worlds news interactively. Want to see where every protest in the past week occurred? We can do that. Every public statement by a national government? We can do that too, but the answer will likely crash your browser. How about every public statement made by China? Or Russia? Or Liechtenstein? The possibilities are not endless, but they are rather large.</p>
                 <h2>Limitations</h2>
@@ -27,4 +64,94 @@
     </body>
     <script type="text/javascript" src = 'javascripts/lib/jquery-2.0.3.min.js'></script>
     <script type="text/javascript" src = 'javascripts/lib/bootstrap-3.0.0.min.js'></script>
+    <script type="text/javascript" src = 'javascripts/lib/d3.v3.min.js'></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var svg = d3.select('#summary_statistics');
+            var r = 500,
+                x = d3.scale.linear().range([0, r]),
+                y = d3.scale.linear().range([0, r]),
+                node,
+                root;
+            var pack = d3.layout.pack()
+                .size([r, r])
+                .value(function(d) { return d.count; });
+
+            var draw = function(d) {
+                node = root = d;
+                var nodes = pack.nodes(root);
+                svg.selectAll('circle')
+                    .data(nodes)
+                    .enter().append('svg:circle')
+                    .attr('class', function(d) {
+                        var cls1 = d.children ? "parent": "child";
+                        var codelevel = d.code.length - 1;
+                        return cls1 + ' code_level_' + codelevel + ' ' + d.code;
+                    })
+                    .attr('cx', function(d) { return d.x; })
+                    .attr('cy', function(d) { return d.y; })
+                    .attr('r', function(d) { return d.r; })
+                    .on("click", function(d) { return zoom(node == d ? root : d); });
+                svg.selectAll("text")
+                    .data(nodes)
+                    .enter().append("svg:text")
+                    .attr("class", function(d) {
+                        var cls1 = d.children ? "parent": "child";
+                        var codelevel = d.code.length - 1;
+                        return cls1 + ' code_level_' + codelevel;
+                    })
+                    .attr('x', function(d) { return d.x; })
+                    .attr('y', function(d) { return d.y; })
+                    .attr('dy', '.35em')
+                    .attr('text-anchor', 'middle')
+                    .style("opacity", function(d) {
+                        return d.r > 20 ? 1: 0;
+                    })
+                    .text('')
+                    .append('tspan').text(function(d) { return d.description; })
+                    // .append('tspan').text(function(d) { return d.count; })
+                    // .attr('x', function(d) { return d.x; });
+                    // .attr('dy', 15);
+                svg.selectAll('.code_level_2, .code_level_3')
+                    .classed('hidden', true)
+                d3.select(window).on("click", function() { zoom(root); });
+            }
+
+            d3.json('/api/statistics', draw);
+
+
+
+            function zoom(d, i) {
+                var codeLevel = d.code.length - 1;
+                console.log(codeLevel);
+                var k = r / d.r / 2;
+                x.domain([d.x - d.r, d.x + d.r]);
+                y.domain([d.y - d.r, d.y + d.r]);
+                var t = svg.transition()
+                    .duration(d3.event.altKey ? 7500 : 750);
+                t.selectAll("circle")
+                    .attr("cx", function(d) { return x(d.x); })
+                    .attr("cy", function(d) { return y(d.y); })
+                    .attr("r", function(d) { return k * d.r; });
+                t.selectAll("text")
+                    .attr("x", function(d) { return x(d.x); })
+                    .attr("y", function(d) { return y(d.y); })
+                    .style("opacity", function(d) { return k * d.r > 20 ? 1 : 0; });
+                for (var j = 1; j < 4; j++) {
+                    console.log('code_level_' + j)
+                    if (j <= codeLevel + 1) {
+                        svg.selectAll('.code_level_' + j)
+                            .classed('hidden', false)
+                    } else {
+                        svg.selectAll('.code_level_' + j)
+                            .classed('hidden', true)
+                    }
+                }
+                node = d;
+                d3.event.stopPropagation();
+            }
+        });
+
+
+    </script>
 </html>
