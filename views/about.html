@@ -11,13 +11,21 @@
                 width: 850px;
             }
 
-            text {
+            #info text {
+                font-size: 20px;
+            }
+
+            #labels text {
               font-size: 11px;
               pointer-events: none;
             }
 
-            text.parent {
+            #labels text.parent {
               fill: #1f77b4;
+            }
+
+            #labels text.code_level_0 {
+                display: none;
             }
 
             circle {
@@ -68,6 +76,12 @@
     <script type="text/javascript">
         $(document).ready(function() {
             var svg = d3.select('#summary_statistics');
+            var svgPack = svg.append('svg:g')
+                .attr('id', 'pack');
+            var svgLabels = svg.append('svg:g')
+                .attr('id', 'labels');
+            var svgInfo = svg.append('svg:g')
+                .attr('id', 'info');
             var r = 500,
                 x = d3.scale.linear().range([0, r]),
                 y = d3.scale.linear().range([0, r]),
@@ -77,10 +91,33 @@
                 .size([r, r])
                 .value(function(d) { return d.count; });
 
+            var setInfo = function(d) {
+                svgInfo.datum(d);
+                var text = svgInfo.selectAll('text');
+                text.remove();
+                svgInfo.append('svg:text')
+                    .attr('x', 500)
+                    .attr('y', 20)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-family', "sans-serif")
+                    .attr('font-size', "55px")
+                    .text('Event type: ' + d.description);
+                svgInfo.append('svg:text')
+                    .attr('x', 500)
+                    .attr('y', 45)
+                    .attr('text-anchor', 'middle')
+                    .attr('font-family', "sans-serif")
+                    .attr('font-size', "55px")
+                    .text('Count: ' + d.count)
+            }
+
             var draw = function(d) {
                 node = root = d;
                 var nodes = pack.nodes(root);
-                svg.selectAll('circle')
+                
+                setInfo(d);
+
+                svgPack.selectAll('circle')
                     .data(nodes)
                     .enter().append('svg:circle')
                     .attr('class', function(d) {
@@ -92,7 +129,7 @@
                     .attr('cy', function(d) { return d.y; })
                     .attr('r', function(d) { return d.r; })
                     .on("click", function(d) { return zoom(node == d ? root : d); });
-                svg.selectAll("text")
+                svgLabels.selectAll("text")
                     .data(nodes)
                     .enter().append("svg:text")
                     .attr("class", function(d) {
@@ -122,29 +159,35 @@
 
 
             function zoom(d, i) {
+                setInfo(d);
                 var codeLevel = d.code.length - 1;
-                console.log(codeLevel);
                 var k = r / d.r / 2;
                 x.domain([d.x - d.r, d.x + d.r]);
                 y.domain([d.y - d.r, d.y + d.r]);
-                var t = svg.transition()
+                var tPack = svgPack.transition()
                     .duration(d3.event.altKey ? 7500 : 750);
-                t.selectAll("circle")
+                var tLabels = svgLabels.transition()
+                    .duration(d3.event.altKey ? 7500 : 750);
+                tPack.selectAll("circle")
                     .attr("cx", function(d) { return x(d.x); })
                     .attr("cy", function(d) { return y(d.y); })
                     .attr("r", function(d) { return k * d.r; });
-                t.selectAll("text")
+                tLabels.selectAll("text")
                     .attr("x", function(d) { return x(d.x); })
                     .attr("y", function(d) { return y(d.y); })
                     .style("opacity", function(d) { return k * d.r > 20 ? 1 : 0; });
                 for (var j = 1; j < 4; j++) {
-                    console.log('code_level_' + j)
-                    if (j <= codeLevel + 1) {
+                    if (j < codeLevel + 1) {
+                        svgPack.selectAll('.code_level_' + j)
+                            .classed('hidden', false);
+                        svgLabels.selectAll('.code_level_' + j)
+                            .classed('hidden', true);
+                    } else if (j == codeLevel + 1) {
                         svg.selectAll('.code_level_' + j)
-                            .classed('hidden', false)
+                            .classed('hidden', false);
                     } else {
                         svg.selectAll('.code_level_' + j)
-                            .classed('hidden', true)
+                            .classed('hidden', true);
                     }
                 }
                 node = d;
