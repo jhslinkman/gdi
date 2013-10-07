@@ -33,6 +33,7 @@ if ('development' == app.get('env')) {
 // Web interface
 app.get('/', routes.index);
 app.get('/about', routes.about);
+app.get('/tree', routes.tree);
 
 // API
 app.use('/api', require('./api'));

@@ -36,6 +36,7 @@ define(['d3'], function(d3) {
         this.root.children.forEach(toggleAll);
 
         this.update(this.root);
+        d3.select('#c0').classed('selected', true);
     }
 
     Tree.prototype.update = function(source) {
@@ -44,6 +45,7 @@ define(['d3'], function(d3) {
         var diagonal = this.diagonal;
         var toggle = this.toggle;
         var update = this.update;
+        var select = this.select;
         var duration = d3.event && d3.event.altKey ? 5000 : 500;
       
         // Compute the new tree layout.
@@ -64,7 +66,7 @@ define(['d3'], function(d3) {
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("svg:g")
             .attr("class", "node")
-            .attr('id', function(d) {return d.code; })
+            .attr('id', function(d) {return 'c' + d.code; })
             .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
             .on("click", function(d) {
                 var n = d3.select(d3.event.target.parentElement);
@@ -73,6 +75,7 @@ define(['d3'], function(d3) {
                 } else {
                     n.classed('selected', false);
                 }
+                select(d);
                 toggle.call(_this, d);
                 update.call(_this, d);
             });
@@ -166,5 +169,19 @@ define(['d3'], function(d3) {
             // if (typeof callback !== 'undefined') callback();
         });
     }
+
+    Tree.prototype.select = function(d) {
+        pcode = d.code.length >2 ? d.code.slice(0,d.code.length - 1) : '0';
+        var p = d3.select('#c' + pcode);
+        var others = _.some(p.data()[0].children, function(c) {
+            return d3.select('#c' + c.code).classed('selected');
+        });
+        if (!others) {
+            p.classed('selected', true);
+        } else {
+            p.classed('selected', false);
+        }
+    } 
+
     return Tree;
 });

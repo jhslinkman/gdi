@@ -36,15 +36,29 @@ module.exports = function() {
     });
 
     app.get('/events', function(req, res) {
-        where = [];
+        var whereArray = [];
+        var val, vals, where;
         for (var key in req.query) {
-            if (sqlCheck(key, req.query[key])) {
-                where.push(key + " = '" + req.query[key] + "'");
+            vals = req.query[key].split(',');
+            where = [];
+            for (var i = 0; i < vals.length; i++) {
+                val = vals[i];
+                if (sqlCheck(key, val)) {
+                    where.push(val);
+                }
+            }
+            console.log(where);
+            if (where.length === 1) {
+                console.log('l1');
+                whereArray.push(key + " = '" + where[0] + "'");
+            } else if (where.length > 1) {
+                console.log('l>1');
+                whereArray.push(key + " IN ('" + where.join("', '") + "')");
             }
         }
         var sql = 'SELECT globaleventid, actiongeo_long, actiongeo_lat, sourceurl, eventcode FROM events';
-        if (where) {
-            sql += ' WHERE ' + where.join(' AND ');
+        if (whereArray.length > 0) {
+            sql += ' WHERE ' + whereArray.join(' AND ');
         }
         conn.query(sql, function(error, result) {
             if (error) throw error;

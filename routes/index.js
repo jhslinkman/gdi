@@ -17,3 +17,11 @@ exports.index = function(req, res) {
 exports.about = function(req, res) {
     res.render('about', {} );
 };
+
+/*
+ * GET tree test page
+ */
+
+exports.tree = function(req, res) {
+    res.render('testTree', {})
+};

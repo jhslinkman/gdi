@@ -19,3 +19,4 @@ activate
 .venv/
 config.js
 data/
+appDevServer.sh

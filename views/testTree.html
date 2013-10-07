@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>About GDELT Interactive</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-3.0.0.min.css" />
+        <style type="text/css">
+            .node circle {
+              cursor: pointer;
+              fill: #fff;
+              stroke: steelblue;
+              stroke-width: 1.5px;
+            }
+
+            .node text {
+              font-size: 11px;
+            }
+
+            path.link {
+              fill: none;
+              stroke: #ccc;
+              stroke-width: 1.5px;
+            }
+
+            .node.selected circle {
+              stroke: red;
+              fill: red;
+              stroke-width: 1.5px;  
+            }
+        </style>
+    </head>
+    <body>
+        <div class = 'row'>
+            <div class = 'col-md-12'>
+                <h1>Test tree</h1>
+                <svg id = 'drawing' width = '850' height = '500'></svg>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript" src = '/javascripts/require-2.1.8.min.js' data-main = '/javascripts/about.js'></script>
+</html>
