@@ -1,8 +1,10 @@
 define(['jquery',
         'underscore',
         'backbone',
-        'gdeltquery'],
-function($, _, Backbone, GDELTQuery) {
+        'd3',
+        'gdeltquery',
+        'tree'],
+function($, _, Backbone, d3, GDELTQuery, Tree) {
 
     TreeView = Backbone.View.extend({
         el: '#svgTree',
@@ -17,6 +19,7 @@ function($, _, Backbone, GDELTQuery) {
             // },
 
             'click .node': function(e) {
+                console.log('here');
                 var g = e.target.parentElement;
                 var code = g.id.slice(1);
                 var q = this.query;
@@ -56,6 +59,8 @@ function($, _, Backbone, GDELTQuery) {
 
         initialize: function(gdeltevent) {
             this.query = new GDELTQuery();
+            this.tree = new Tree('/api/statistics', {'height': 500, 'width': 850});
+            this.tree.json();
         }
 
     });
