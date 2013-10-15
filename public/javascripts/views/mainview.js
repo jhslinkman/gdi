@@ -4,17 +4,18 @@ define(['jquery',
         'd3',
         'gdeltquery',
         'drawing',
+        'tree',
         'drawinghistory',
         'queryhistory',
         'mapview',
         'eventview',
         'actorview',
         'svgview'],
-function($, _, Backbone, d3, GDELTQuery, Drawing,
+function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
          DrawingHistory, QueryHistory, MapView,
          EventView, ActorView, SVGView) {
     var MainView = Backbone.View.extend({
-        el: '#interactive_control',
+        el: '#query_control',
 
         events: {
             'click #reload': 'reload',
@@ -30,7 +31,69 @@ function($, _, Backbone, d3, GDELTQuery, Drawing,
                 this.eventview.render();
                 this.actor1view.render();
                 this.actor2view.render();
+            },
+
+            'click #search': function(e) {
+                if (!this.tree) {
+                    this.tree = new Tree('/api/statistics', {
+                        'height': 500,
+                        'width': 850,
+                        'id': 'eventCodeTree',
+                        'svgId': '#svg'
+                    });
+                    this.tree.json();
+                } else { this.tree.show(); }
+                this.drawing.hide();
+                this.$('.draw').hide();
+                this.$('.query').show();
+            },
+
+            'click #back': function(e) {
+                this.tree.hide();
+                this.drawing.show();
+                this.$('.draw').show();
+                this.$('.query').hide();
+            },            
+
+            'click #draw': function(e) {
+                // this.query = new GDELTQuery();
+                this.getQueryAttribudes();
+                d3.select('#events').selectAll('circle').remove();
+                var drawing = this.drawing;
+                drawing.set_events(function() {drawing.draw_events();});
+                drawing.show();
+                this.$('.draw').show();
+                this.tree.hide();
+                this.$('.query').hide();
+            },
+
+        },
+
+        getQueryAttribudes: function() {
+            // parse event code from query tree
+            var aecs = d3.select('#eventCodeTree').selectAll('.selected').data();
+            this.query.clear();
+            var ercs = [],
+                ebcs = [],
+                ecs = [];
+            for (var i = 0; i < aecs.length; i++) {
+                if (aecs[i].code === '0') {
+                    var ercs = [],
+                        ebcs = [],
+                        ecs = [];
+                    break
+                } else if (aecs[i].code.length === 2) {
+                    ercs.push(aecs[i].code);
+                } else if (aecs[i].code.length === 3) {
+                    ebcs.push(aecs[i].code);
+                } else if (aecs[i].code.length === 4) {
+                    ecs.push(aecs[i].code);
+                }
+                if (ercs.length > 0) this.query.set('eventrootcode', ercs);
+                if (ebcs.length > 0) this.query.set('eventbasecode', ebcs);
+                if (ecs.length > 0) this.query.set('eventcode', ecs);
             }
+            
         },
 
         initialize: function() {

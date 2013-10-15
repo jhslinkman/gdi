@@ -8,8 +8,8 @@ define(['d3'], function(d3) {
         this.tree = d3.layout.tree()
             .size([this.svgOptions.height,this.svgOptions.width]);
 
-        this.svgTree = d3.select('#drawing').append("svg:g")
-            .attr('id', 'svgTree');
+        this.svgTree = d3.select(svgOptions.svgId).append("svg:g")
+            .attr('id', svgOptions.id);
 
         this.diagonal = d3.svg.diagonal()
             .projection(function(d) { return [d.y, d.x]; });
@@ -227,6 +227,14 @@ define(['d3'], function(d3) {
     Tree.prototype.isOpen = function(d) {
         if (d._children || d.children) {return false;}
         return true;
+    }
+
+    Tree.prototype.hide = function(d) {
+        this.svgTree.style('display', 'none');
+    }
+    
+    Tree.prototype.show = function(d) {
+        this.svgTree.style('display', 'block');
     }
 
     return Tree;

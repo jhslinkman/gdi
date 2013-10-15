@@ -40,8 +40,12 @@ require(['jquery',
          'bootstrap'],
     function($, Tree, TreeView) {
     $(document).ready( function() {
-        this.tree = new Tree('/api/statistics', {'height': 500, 'width': 850});
-        this.tree.json();
+        tree = new Tree('/api/statistics', {
+            'height': 500,
+            'width': 850,
+            'svgId': '#drawing'
+        });
+        tree.json();
         // treeView = new TreeView();
     });
 });

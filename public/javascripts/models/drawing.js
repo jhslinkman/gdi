@@ -127,6 +127,16 @@ function(_, Backbone, d3, GDELTQuery) {
             } else if (this.get('loaded')) {
                 this.set('loaded', false);
             }
+        },
+
+        hide: function() {
+            d3.select('#map').style('display', 'none');
+            d3.select('#events').style('display', 'none');
+        },
+
+        show: function() {
+            d3.select('#map').style('display', 'block');
+            d3.select('#events').style('display', 'block');
         }
 
     });

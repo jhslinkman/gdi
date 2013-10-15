@@ -8,6 +8,7 @@ requirejs.config({
         'd3': 'lib/d3.v3.min',
         // in models/
         'drawing': 'models/drawing',
+        'tree': 'models/tree',
         'gdeltevent': 'models/gdeltevent',
         'gdeltquery': 'models/gdeltquery',
         // in views/

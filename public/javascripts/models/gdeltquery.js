@@ -25,7 +25,8 @@ define(['underscore', 'backbone'], function(_, Backbone) {
                 qArray.push(key + '=' + attrs[key]);
             }
             return qArray.join('&');
-        }
+        },
+        
     });
 
     return GDELTQuery;
