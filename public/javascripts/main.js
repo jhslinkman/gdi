@@ -19,6 +19,7 @@ requirejs.config({
         'reloadview': 'views/reloadview',
         'svgview': 'views/svgview',
         'eventmodal': 'views/eventmodal',
+        'summaryModal': 'views/summaryModal',
         // in collections/
         'drawinghistory': 'collections/drawinghistory',
         'queryhistory': 'collections/queryhistory'

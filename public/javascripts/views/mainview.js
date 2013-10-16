@@ -10,28 +10,27 @@ define(['jquery',
         'mapview',
         'eventview',
         'actorview',
-        'svgview'],
+        'svgview',
+        'summaryModal'],
 function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
          DrawingHistory, QueryHistory, MapView,
-         EventView, ActorView, SVGView) {
+         EventView, ActorView, SVGView, SummaryModal) {
     var MainView = Backbone.View.extend({
         el: '#query_control',
 
         events: {
-            'click #reload': 'reload',
-            'click #view_query': function() {
-                alert(this.query.constructQueryString());
-            },
-            'click #clear_query': function() {
-                this.query = new GDELTQuery();
-                this.drawing.set('query', this.query);
-                this.eventview.set_query(this.query);
-                this.actor1view.set_query(this.query);
-                this.actor2view.set_query(this.query);
-                this.eventview.render();
-                this.actor1view.render();
-                this.actor2view.render();
-            },
+            // 'click #reload': 'reload',
+
+            // 'click #clear_query': function() {
+            //     this.query = new GDELTQuery();
+            //     this.drawing.set('query', this.query);
+            //     this.eventview.set_query(this.query);
+            //     this.actor1view.set_query(this.query);
+            //     this.actor2view.set_query(this.query);
+            //     this.eventview.render();
+            //     this.actor1view.render();
+            //     this.actor2view.render();
+            // },
 
             'click #search': function(e) {
                 if (!this.tree) {
@@ -66,6 +65,15 @@ function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
                 this.tree.hide();
                 this.$('.query').hide();
             },
+
+            'click #summary': function(e) {
+                this.getQueryAttribudes();
+                var summaryModal = new SummaryModal(this.query);
+                var summaryModalHtml = summaryModal.render();
+                var summaryModalWrapper = $('#summaryModal');
+                summaryModalWrapper.html(summaryModalHtml);
+                summaryModalWrapper.modal();
+            }
 
         },
 
@@ -112,10 +120,10 @@ function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
             this.drawing = new Drawing(this.query);
             this.listenTo(this.drawing, 'change:events_loaded', this.loading);
 
-            this.mapview = new MapView();
-            this.eventview = new EventView(this.query);
-            this.actor1view = new ActorView(this.query, 'actor1');
-            this.actor2view = new ActorView(this.query, 'actor2');
+            // this.mapview = new MapView();
+            // this.eventview = new EventView(this.query);
+            // this.actor1view = new ActorView(this.query, 'actor1');
+            // this.actor2view = new ActorView(this.query, 'actor2');
             this.svgview = new SVGView();
         },
 
@@ -139,9 +147,9 @@ function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
             this.query = _.clone(this.query);
             this.drawing = new Drawing(this.query);
             this.listenTo(this.drawing, 'change:events_loaded', this.loading);
-            this.eventview.set_query(this.query);
-            this.actor1view.set_query(this.query);
-            this.actor2view.set_query(this.query);
+            // this.eventview.set_query(this.query);
+            // this.actor1view.set_query(this.query);
+            // this.actor2view.set_query(this.query);
         },
 
         loading: function(d) {

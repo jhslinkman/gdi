@@ -47,12 +47,9 @@ module.exports = function() {
                     where.push(val);
                 }
             }
-            console.log(where);
             if (where.length === 1) {
-                console.log('l1');
                 whereArray.push(key + " = '" + where[0] + "'");
             } else if (where.length > 1) {
-                console.log('l>1');
                 whereArray.push(key + " IN ('" + where.join("', '") + "')");
             }
         }
