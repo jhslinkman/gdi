@@ -11,7 +11,8 @@ function($, _, Backbone, d3,
     var SVGView = Backbone.View.extend({
         el: '#svg',
 
-        initialize: function() {
+        initialize: function(drawing) {
+            this.drawing = drawing;
             this.$('#events').on('click', '.event', function(e) {
                 var gdeltEvent = new GDELTEvent({id: e.target.dataset['id']});
                 gdeltEvent.fetch({
@@ -23,6 +24,10 @@ function($, _, Backbone, d3,
                         eventModalWrapper.modal();
                     }
                 });
+            });
+            this.$('#map').on('click', '.country', function(e) {
+                var cId = e.target.id;
+                drawing.zoom(cId);
             });
         }
 

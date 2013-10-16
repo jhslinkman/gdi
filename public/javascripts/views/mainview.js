@@ -124,7 +124,7 @@ function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
             // this.eventview = new EventView(this.query);
             // this.actor1view = new ActorView(this.query, 'actor1');
             // this.actor2view = new ActorView(this.query, 'actor2');
-            this.svgview = new SVGView();
+            this.svgview = new SVGView(this.drawing);
         },
 
         reload: function() {

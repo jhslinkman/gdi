@@ -43,7 +43,7 @@ function(_, Backbone, d3, GDELTQuery) {
         },
 
         set_projection: function() {
-            this.set('projection', d3.geo[this.get('projection_type')]().scale(this.get('scale')).translate(this.get('translate')));
+            this.set('projection', d3.geo[this.get('projection_type')]().translate(this.get('translate')).scale(this.get('scale')));
         },
 
         set_map: function(callback) {
@@ -69,11 +69,13 @@ function(_, Backbone, d3, GDELTQuery) {
                     .datum(this.get('map_data'))
                     .attr("d", path);
                     // .attr('id', 'world_map');
-                svg.selectAll(".subunit")
+                svg.selectAll(".country")
                     .data(this.get('map_data').features)
                     .enter().append("path")
-                    .attr("class", 'subunit')
+                    .attr("class", 'country')
+                    .attr("id", function(d) { return d.id; })
                     .attr("d", path);
+                    // .on("click", this.zoom);
                 this.set('map_changed', false);
             }
             if (typeof callback !== 'undefined') callback();
@@ -137,6 +139,52 @@ function(_, Backbone, d3, GDELTQuery) {
         show: function() {
             d3.select('#map').style('display', 'block');
             d3.select('#events').style('display', 'block');
+        },
+
+        zoom: function(countryId) {
+            var x, y, k;
+            var c = d3.select('#' + countryId);
+            var projection = this.get('projection');
+            if (!c.classed('centered')) {
+                var path = d3.geo.path()
+                             .projection(projection);
+                var centroid = path.centroid(c.data()[0]);
+                x = centroid[0];
+                y = centroid[1];
+                k = 4;
+                c.classed('centered', true);
+            }
+            var paths = d3.selectAll('path');
+            var circles = d3.selectAll('circle');
+            var nx = 425 - x;
+            var ny = 250 - y;
+            var transform = "translate(" +
+                // set original origin
+                    850 / 2 + "," + 500 / 2 +
+                // ")scale(" +
+                // // zoom 4x
+                //     k +
+                ")translate(" +
+                // set new origin relative to centroid of selected country
+                    -x + "," + -y +
+                ")";
+            console.log(transform);
+            paths.transition().duration(750)
+                .attr("transform", transform);
+            circles.transition().duration(750)
+                .attr("transform", function(d) {
+                    var t = "translate(" +
+                        850 / 2 + "," + 500 / 2 +
+                    ")translate(" +
+                        projection([d.actiongeo_long, d.actiongeo_lat]) +
+                    // ")scale(" +
+                    //     k +
+                    ")translate(" +
+                        -x + "," + -y +
+                    ")";
+                    // console.log(t);
+                    return t;
+                });
         }
 
     });
