@@ -11,6 +11,7 @@ function(_, Backbone, d3, GDELTQuery) {
             projection: null,
             translate: [425, 250],
             scale: 115,
+            centeredCountry: null,
 
             map_data: null,
             map_changed: false,
@@ -145,46 +146,56 @@ function(_, Backbone, d3, GDELTQuery) {
             var x, y, k;
             var c = d3.select('#' + countryId);
             var projection = this.get('projection');
-            if (!c.classed('centered')) {
+            var paths = d3.selectAll('path');
+            var circles = d3.selectAll('circle');
+            if (this.get('centeredCountry') !== countryId) {
                 var path = d3.geo.path()
                              .projection(projection);
                 var centroid = path.centroid(c.data()[0]);
                 x = centroid[0];
                 y = centroid[1];
-                k = 4;
-                c.classed('centered', true);
-            }
-            var paths = d3.selectAll('path');
-            var circles = d3.selectAll('circle');
-            var nx = 425 - x;
-            var ny = 250 - y;
-            var transform = "translate(" +
-                // set original origin
-                    850 / 2 + "," + 500 / 2 +
-                // ")scale(" +
-                // // zoom 4x
-                //     k +
-                ")translate(" +
-                // set new origin relative to centroid of selected country
-                    -x + "," + -y +
-                ")";
-            console.log(transform);
-            paths.transition().duration(750)
-                .attr("transform", transform);
-            circles.transition().duration(750)
-                .attr("transform", function(d) {
-                    var t = "translate(" +
+                var lonLat = projection.invert(centroid);
+                var rotate = [lonLat[0]/2, x, y].join(' ');
+                k = 5;
+                this.set('centeredCountry', countryId);
+                paths.transition().duration(750)
+                    .attr("transform", "translate(" +
                         850 / 2 + "," + 500 / 2 +
-                    ")translate(" +
-                        projection([d.actiongeo_long, d.actiongeo_lat]) +
-                    // ")scale(" +
-                    //     k +
+                    ")scale(" +
+                        k +
                     ")translate(" +
                         -x + "," + -y +
-                    ")";
-                    // console.log(t);
-                    return t;
-                });
+                    ")rotate(" +
+                        rotate +
+                    ")");
+                circles.transition().duration(750)
+                    .attr("transform", function(d) {
+                        return "translate(" +
+                            850 / 2 + "," + 500 / 2 +
+                        ")scale(" +
+                            k +
+                        ")translate(" +
+                            -x + "," + -y +
+                        ")rotate(" +
+                            rotate +
+                        ")translate(" +
+                            projection([d.actiongeo_long, d.actiongeo_lat]) +
+                        ")";
+                    })
+                    .attr('r', 1);
+            } else {
+                paths.transition().duration(750)
+                    .attr("transform", '');
+                    //     "translate(" +
+                    //     850 / 2 + "," + 500 / 2 +
+                    // ')');
+                circles.transition().duration(750)
+                    .attr("transform", function(d) {
+                            return "translate(" + projection([d.actiongeo_long, d.actiongeo_lat]) + ")";
+                    })
+                    .attr('r', 2);
+                this.set('centeredCountry', null);
+;            }
         }
 
     });

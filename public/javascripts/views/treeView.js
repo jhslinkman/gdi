@@ -30,7 +30,6 @@ function($, _, Backbone, d3, GDELTQuery, Tree) {
                     ecs.push(code);
                     q.set('eventcodes', ecs);
                 }
-                console.log(q.get('eventcodes'))
             }
             // 'click .node': function(e) {
             //     var g = e.target.parentElement; 

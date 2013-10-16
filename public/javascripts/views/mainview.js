@@ -59,7 +59,12 @@ function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
                 this.getQueryAttribudes();
                 d3.select('#events').selectAll('circle').remove();
                 var drawing = this.drawing;
-                drawing.set_events(function() {drawing.draw_events();});
+                drawing.set_events(function() {
+                    if (drawing.get('centeredCountry') !== null) {
+                        drawing.set('centeredCountry', null);
+                    }
+                    drawing.draw_events();
+                });
                 drawing.show();
                 this.$('.draw').show();
                 this.tree.hide();
