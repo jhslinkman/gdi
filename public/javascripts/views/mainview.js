@@ -2,35 +2,25 @@ define(['jquery',
         'underscore',
         'backbone',
         'd3',
+        'fitProjection',
         'gdeltquery',
-        'drawing',
+        'map',
+        'events',
         'tree',
-        'drawinghistory',
         'queryhistory',
         'mapview',
         'eventview',
         'actorview',
         'svgview',
         'summaryModal'],
-function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
-         DrawingHistory, QueryHistory, MapView,
+function($, _, Backbone, d3, fitProjection, GDELTQuery, Map, Events, Tree,
+         QueryHistory, MapView,
          EventView, ActorView, SVGView, SummaryModal) {
     var MainView = Backbone.View.extend({
         el: '#query_control',
 
         events: {
-            // 'click #reload': 'reload',
-
-            // 'click #clear_query': function() {
-            //     this.query = new GDELTQuery();
-            //     this.drawing.set('query', this.query);
-            //     this.eventview.set_query(this.query);
-            //     this.actor1view.set_query(this.query);
-            //     this.actor2view.set_query(this.query);
-            //     this.eventview.render();
-            //     this.actor1view.render();
-            //     this.actor2view.render();
-            // },
+            // 'click': function(e) {alert('click');},
 
             'click #search': function(e) {
                 if (!this.tree) {
@@ -42,14 +32,16 @@ function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
                     });
                     this.tree.json();
                 } else { this.tree.show(); }
-                this.drawing.hide();
+                this.map.hide();
+                this.gdeltEvents.hide();
                 this.$('.draw').hide();
                 this.$('.query').show();
             },
 
             'click #back': function(e) {
                 this.tree.hide();
-                this.drawing.show();
+                this.map.show();
+                this.gdeltEvents.show();;
                 this.$('.draw').show();
                 this.$('.query').hide();
             },            
@@ -58,14 +50,15 @@ function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
                 // this.query = new GDELTQuery();
                 this.getQueryAttribudes();
                 d3.select('#events').selectAll('circle').remove();
-                var drawing = this.drawing;
-                drawing.set_events(function() {
-                    if (drawing.get('centeredCountry') !== null) {
-                        drawing.set('centeredCountry', null);
+                var gdeltEvents = this.gdeltEvents;
+                gdeltEvents.get(function() {
+                    if (gdeltEvents.map.focus !== null) {
+                        drawing.focus = null;
                     }
-                    drawing.draw_events();
+                    gdeltEvents.draw();
                 });
-                drawing.show();
+                this.map.show();
+                this.gdeltEvents.show();;
                 this.$('.draw').show();
                 this.tree.hide();
                 this.$('.query').hide();
@@ -110,60 +103,65 @@ function($, _, Backbone, d3, GDELTQuery, Drawing, Tree,
         },
 
         initialize: function() {
-            var query = new GDELTQuery();
-            var drawing = new Drawing(query);
-            this.listenTo(drawing, 'change:events_loaded', this.loading);
-            var _this = this;
-            drawing.draw(function() {_this.stopListening(drawing);});
-            this.drawinghistory = new DrawingHistory();
-            this.drawinghistory.add(drawing);
-            this.queryhistory = new QueryHistory();
-            this.queryhistory.add(query);
 
-            // this.query = new GDELTQuery();
-            this.query = _.clone(query);
-            this.drawing = new Drawing(this.query);
-            this.listenTo(this.drawing, 'change:events_loaded', this.loading);
-
-            // this.mapview = new MapView();
-            // this.eventview = new EventView(this.query);
-            // this.actor1view = new ActorView(this.query, 'actor1');
-            // this.actor2view = new ActorView(this.query, 'actor2');
-            this.svgview = new SVGView(this.drawing);
-        },
-
-        reload: function() {
-            // clear that svg data which needs clearing
-            d3.selectAll('circle').remove();
-
-            // redraw
-            var drawing = this.drawing;
-            var _this = this;
-            drawing.set_events(function() {
-                drawing.draw_events();
-                _this.stopListening(drawing);
+            this.on('map_loading', function(e) {
+                $('#map_loading').removeClass('hidden')
             });
 
-            // clear old data and update history
-            this.drawinghistory.add(drawing);
-            this.queryhistory.add(this.query);
+            this.on('map_loaded', function(e) {
+                $('#map_loading').addClass('hidden')
+            });
 
-            // create new drawing and query objects
-            this.query = _.clone(this.query);
-            this.drawing = new Drawing(this.query);
-            this.listenTo(this.drawing, 'change:events_loaded', this.loading);
-            // this.eventview.set_query(this.query);
-            // this.actor1view.set_query(this.query);
-            // this.actor2view.set_query(this.query);
+            this.on('events_loading', function(e) {
+                $('#events_loading').removeClass('hidden')
+            });
+
+            this.on('events_loaded', function(e) {
+                $('#events_loading').addClass('hidden')
+            });
+
+            this.setSize();
+
+            this.query = new GDELTQuery();
+            this.map = new Map();
+            this.map.setSvgAttrs();
+            var _this = this;
+            this.map.get(function() {_this.fitMapProjection(); _this.map.draw(); _this.trigger('map_loaded');});
+            this.gdeltEvents = new Events(this.map, this.query);
+            this.gdeltEvents.get(function() {_this.gdeltEvents.draw(); _this.trigger('events_loaded')});
+            this.svgview = new SVGView(this.gdeltEvents);
         },
 
-        loading: function(d) {
-            if (d.get('events_loaded')) {
-                $('#loading').addClass('hidden');
-            } else {
-                $('#loading').removeClass('hidden');
-            }
+        resize: function() {
+            this.setSize();
+            this.map.setSvgAttrs();
+            this.fitProjection();
+            this.map.draw();
+            this.gdeltEvents.draw();
+        },
+
+        setSize: function() {
+            var width = $('#svgContainer').width(),
+                height = Math.min($(window).height(), width);
+            d3.select('#svg').attr('width', width).attr('height', height);
+            // console.log([width, height]);
+        },
+
+        fitProjection: function() {
+            return fitProjection;
+        },
+
+        fitMapProjection: function() {
+            var w = $('#svgContainer').width(),
+                h = $('#svgContainer').height(),
+                pos = $('#svgContainer').position(),
+                box = [[pos.left, pos.top], [w, h]],
+                p = this.map.projection();
+            fitProjection(p, this.map.data, box)
+            this.map.scale = p.scale();
+            this.map.translate = p.translate();
         }
+
     })
     return MainView;
 });

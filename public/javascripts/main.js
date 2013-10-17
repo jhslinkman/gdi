@@ -6,8 +6,10 @@ requirejs.config({
         'backbone': 'lib/backbone.min',
         'bootstrap': 'lib/bootstrap-3.0.0.min',
         'd3': 'lib/d3.v3.min',
+        'fitProjection': 'lib/fitProjection',
         // in models/
-        'drawing': 'models/drawing',
+        'map': 'models/map',
+        'events': 'models/events',
         'tree': 'models/tree',
         'gdeltevent': 'models/gdeltevent',
         'gdeltquery': 'models/gdeltquery',
@@ -21,7 +23,7 @@ requirejs.config({
         'eventmodal': 'views/eventmodal',
         'summaryModal': 'views/summaryModal',
         // in collections/
-        'drawinghistory': 'collections/drawinghistory',
+        // 'drawinghistory': 'collections/drawinghistory',
         'queryhistory': 'collections/queryhistory'
     },
 
@@ -42,15 +44,18 @@ requirejs.config({
         },
         'd3': {
             exports: 'd3'
+        },
+        'fitProjection': {
+            exports: 'fitProjection'
         }
     }
 });
 
 require(['jquery',
          'mainview',
-         'gdeltevent',
+         'fitProjection',
          'bootstrap'],
-    function($, MainView, GDELTEvent) {
+    function($, MainView, fitProjection) {
     $(document).ready( function() {
         mainview = new MainView();
     });

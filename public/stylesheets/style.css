@@ -1,3 +1,5 @@
+/* General style settings */
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -5,4 +7,61 @@ body {
 
 a {
   color: #00B7FF;
+}
+
+#loading {
+  float: right;
+  margin-bottom: -500px;
+}
+
+/* Map specific style settings */
+
+.country {
+  fill: #ddc;
+}
+
+/* Event specific style settings */
+
+.event {
+    fill: black;
+}
+
+.event:hover {
+    cursor: pointer;
+    fill: gold;
+    stroke: gold;
+    stroke-width: 2.5px;
+}
+
+/* QueryView specific style settings */
+
+.node circle {
+  cursor: pointer;
+  fill: lightsteelblue;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node.open circle {
+    fill: #fff;
+}
+
+.node text {
+  font-size: 11px;
+}
+
+path.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+.node.selected circle {
+  stroke: red;
+  fill: #fff;
+  stroke-width: 1.5px;  
+}
+
+.query {
+  display: none;
 }

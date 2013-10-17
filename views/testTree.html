@@ -6,6 +6,10 @@
         <link rel='stylesheet' href='/stylesheets/style.css' />
         <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-3.0.0.min.css" />
         <style type="text/css">
+
+          .country {
+        fill: #ddc;
+      }
             .node circle {
               cursor: pointer;
               fill: lightsteelblue;
@@ -38,9 +42,12 @@
         <div class = 'row'>
             <div class = 'col-md-12'>
                 <h1>Test tree</h1>
-                <svg id = 'drawing' width = '850' height = '500'></svg>
+                <svg id = 'svg' width = '850' height = '500'>
+                  <g id = 'map'></g>
+                  <g id = 'events'></g>
+                </svg>
             </div>
         </div>
     </body>
-    <script type="text/javascript" src = '/javascripts/require-2.1.8.min.js' data-main = '/javascripts/about.js'></script>
+    <script type="text/javascript" src = '/javascripts/require-2.1.8.min.js' data-main = '/javascripts/testMain.js'></script>
 </html>
