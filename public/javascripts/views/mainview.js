@@ -132,19 +132,19 @@ function($, _, Backbone, d3, fitProjection, GDELTQuery, Map, Events, Tree,
             this.svgview = new SVGView(this.gdeltEvents);
         },
 
-        resize: function() {
-            this.setSize();
-            this.map.setSvgAttrs();
-            this.fitProjection();
-            this.map.draw();
-            this.gdeltEvents.draw();
+        resize: function(_this) {
+            _this = _this || this;
+            _this.setSize();
+            _this.map.setSvgAttrs();
+            _this.fitProjection();
+            _this.map.draw();
+            _this.gdeltEvents.draw();
         },
 
         setSize: function() {
             var width = $('#svgContainer').width(),
                 height = Math.min($(window).height(), width);
             d3.select('#svg').attr('width', width).attr('height', height);
-            // console.log([width, height]);
         },
 
         fitProjection: function() {

@@ -58,5 +58,8 @@ require(['jquery',
     function($, MainView, fitProjection) {
     $(document).ready( function() {
         mainview = new MainView();
+        $(window).resize(function() {
+            mainview.resize(mainview);
+        });
     });
 });
