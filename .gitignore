@@ -17,6 +17,6 @@ npm-debug.log
 ## Local
 activate
 .venv/
-config.js
+devConfig.js
 data/
 appDevServer.sh
